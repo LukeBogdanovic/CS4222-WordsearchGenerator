@@ -7,7 +7,10 @@ public class WordSearchPuzzle {
 	private List<String> puzzleWords;
 	
 	public WordSearchPuzzle(List<String> userSpecifiedWords) {
-		
+		List<String> words = new ArrayList<String>(userSpecifiedWords);
+		puzzleWords = words;
+		System.out.println(puzzleWords);
+		generateWordSearchpuzzle();
 	}
 	
 	public WordSearchPuzzle(String wordFile, int wordCount, int shortest, int longest) {
@@ -23,25 +26,25 @@ public class WordSearchPuzzle {
 			}
 		}
 		puzzleWords = words;
-		System.out.println(puzzleWords);
+		generateWordSearchpuzzle();
 	}
 	
 	public List<String> getWordSearchList(){
-		return puzzleWords.get(i);
+		return puzzleWords;
 	}
 	
 	public char[][] getPuzzleAsGrid(){
-		char[][] grid = new char[puzzle.length][puzzle[0].length];
 		for(int row = 0; row < puzzle.length;row++ ) {
 			for(int col = 0; col < puzzle[0].length;col++) {
-				grid[row][col] = puzzle[row][col];
+				System.out.print(puzzle[row][col] + " ");
 			}
+			System.out.println();
 		}
-		System.out.println(grid);
-		return grid;
+		return puzzle;
 	}
 	
 	public String getPuzzleAsString() {
+		System.out.println(Arrays.deepToString(puzzle));
 		return Arrays.deepToString(puzzle);
 	}
 	
@@ -59,17 +62,27 @@ public class WordSearchPuzzle {
 	}
 	
 	private void generateWordSearchpuzzle() {
-		int rRow,rCol,rWord;
+		int rRow,rCol,sum=0;
 		String abc = "abcdefghijklmnopqrstuvwxyz";
+		for(int i = 0; i < puzzleWords.size();i++) {
+			int wordLength = puzzleWords.get(i).length();
+			sum = sum + wordLength;
+		}
+		int characters = (int) (sum * 1.5);
+		int length = (int) (Math.sqrt(characters)) + 1;
+		puzzle = new char[length][length];
 		//if() {
 			
 		//}
-		rWord = (int)(Math.random()* puzzleWords.size());
+		Random rand = new Random();
+		int index = rand.nextInt(puzzleWords.size());
 		rRow = (int)(Math.random()*puzzle.length);
 		rCol = (int)(Math.random()*puzzle[0].length);
 		for(int row = rRow;row < puzzleWords.size();row++) {
 			for(int col = rCol;col < puzzleWords.size();col++) {
-				//puzzle[row][col] = 
+				String word = puzzleWords.get(index);
+				word.toCharArray();
+				
 			}
 		}
 		
