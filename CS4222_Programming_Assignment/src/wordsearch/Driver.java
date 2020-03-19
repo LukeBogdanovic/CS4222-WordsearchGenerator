@@ -7,7 +7,6 @@ public class Driver {
 		call.getWordSearchList();
 		call.getPuzzleAsGrid();
 		call.getPuzzleAsString();
-		System.out.println();
 	}
 
 }

@@ -26,10 +26,13 @@ public class WordSearchPuzzle {
 			}
 		}
 		puzzleWords = words;
+		System.out.println(puzzleWords);
 		generateWordSearchpuzzle();
 	}
 	
 	public List<String> getWordSearchList(){
+		Collections.sort(puzzleWords);
+		puzzleWords.stream().forEachOrdered(System.out::println);
 		return puzzleWords;
 	}
 	
@@ -57,13 +60,17 @@ public class WordSearchPuzzle {
 			}
 		}else {
 			System.out.println(getWordSearchList());
-			getWordSearchList();
 		}
 	}
 	
 	private void generateWordSearchpuzzle() {
-		int rRow,rCol,sum=0;
-		String abc = "abcdefghijklmnopqrstuvwxyz";
+		size();
+		fill();
+		fillUnused();
+	}
+	
+	private void size() {
+		int sum = 0;
 		for(int i = 0; i < puzzleWords.size();i++) {
 			int wordLength = puzzleWords.get(i).length();
 			sum = sum + wordLength;
@@ -71,31 +78,28 @@ public class WordSearchPuzzle {
 		int characters = (int) (sum * 1.5);
 		int length = (int) (Math.sqrt(characters)) + 1;
 		puzzle = new char[length][length];
-		//if() {
-			
-		//}
-		Random rand = new Random();
-		int index = rand.nextInt(puzzleWords.size());
-		rRow = (int)(Math.random()*puzzle.length);
-		rCol = (int)(Math.random()*puzzle[0].length);
-		for(int row = rRow;row < puzzleWords.size();row++) {
-			for(int col = rCol;col < puzzleWords.size();col++) {
-				String word = puzzleWords.get(index);
-				word.toCharArray();
-				
-			}
-		}
-		
+	}
+	
+	private void fillUnused() {
+		String abc = "abcdefghijklmnopqrstuvwxyz";
 		for(int row = 0; row < puzzle.length; row++) {
 			for(int col = 0; col < puzzle[0].length; col++) {
 				if(puzzle[row][col] == ' ') {
-					int r =(int)(Math.random()*abc.length());
-					puzzle[row][col] = abc.charAt(r);
+					int rand =(int)(Math.random()*abc.length());
+					puzzle[row][col] = abc.charAt(rand);
 				}
 			}
 		}
-			
 	}
+	
+	private void fill() {
+		int rRow,rCol;
+		String word;
+		
+		   rRow = (int)(Math.random()*puzzle.length);
+		   rCol = (int)(Math.random()*puzzle[0].length);
+		   word = puzzleWords.get(i); 
+	}		   								 
 	
 	private static ArrayList<String> loadWordsFromFile(String filename){
 		try {
