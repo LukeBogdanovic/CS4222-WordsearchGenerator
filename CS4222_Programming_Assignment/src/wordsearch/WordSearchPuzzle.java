@@ -5,36 +5,29 @@ import java.io.*;
 public class WordSearchPuzzle {
 	private char[][]puzzle;
 	private List<String> puzzleWords;
-		
-	public static void main(String args[]) {
-		//WordSearchPuzzle call = new WordSearchPuzzle("C:\\Users\\godof\\Documents\\dictionary.txt", 8, 4, 10);
-        //puzzleWords = 
-		//System.out.println(puzzleWords);
-		String words = "how who where what when why cause whatever";
-	    List<String> usW = new ArrayList<String>(Arrays.asList(words));
-		//System.out.println(usW);
-		WordSearchPuzzle call = new WordSearchPuzzle(usW);
-		//call.getPuzzleAsGrid();
-	}
 	
 	public WordSearchPuzzle(List<String> userSpecifiedWords) {
-		String[] str = userSpecifiedWords.toArray(new String[userSpecifiedWords.size()]);
-		System.out.println(Arrays.deepToString(str));
-		int i = 0;
-		while(i < str.length) {
-			puzzleWords.add(i,str[i]);
-			i++;
-		}
 		
 	}
 	
 	public WordSearchPuzzle(String wordFile, int wordCount, int shortest, int longest) {
-		List<String> words = new ArrayList<String>(loadWordsFromFile(wordFile));
-		
+		List<String> File = new ArrayList<String>(loadWordsFromFile(wordFile));
+		List<String> words = new ArrayList<String>(wordCount);
+		for(int i = 0; i < wordCount; i++) {
+			Random r = new Random();
+			int index = r.nextInt(File.size());
+			if(File.get(i).length() >= shortest || File.get(i).length() <= longest ) {
+				words.add(i, File.get(index));
+			}else {
+				i--;
+			}
+		}
+		puzzleWords = words;
+		System.out.println(puzzleWords);
 	}
 	
 	public List<String> getWordSearchList(){
-		return puzzleWords;
+		return puzzleWords.get(i);
 	}
 	
 	public char[][] getPuzzleAsGrid(){
@@ -56,6 +49,9 @@ public class WordSearchPuzzle {
 		
 		if(hide == false) {
 			getWordSearchList();
+			for(int i = 0; i < puzzleWords.size();i++) {
+				
+			}
 		}else {
 			System.out.println(getWordSearchList());
 			getWordSearchList();
@@ -64,8 +60,6 @@ public class WordSearchPuzzle {
 	
 	private void generateWordSearchpuzzle() {
 		int rRow,rCol,rWord;
-		String words = "how who where what when why cause whatever";
-		ArrayList<String> uSW = new ArrayList<String>(Arrays.asList(words.split(" ")));
 		String abc = "abcdefghijklmnopqrstuvwxyz";
 		//if() {
 			
@@ -78,6 +72,7 @@ public class WordSearchPuzzle {
 				//puzzle[row][col] = 
 			}
 		}
+		
 		for(int row = 0; row < puzzle.length; row++) {
 			for(int col = 0; col < puzzle[0].length; col++) {
 				if(puzzle[row][col] == ' ') {
