@@ -6,11 +6,15 @@ public class WordSearchPuzzle {
 	private char[][]puzzle;
 	private List<String> puzzleWords;
 	
+	public static void main(String[] args) {
+		
+	}
+	
 	public WordSearchPuzzle(List<String> userSpecifiedWords) {
 		List<String> words = new ArrayList<String>(userSpecifiedWords);
 		puzzleWords = words;
-		System.out.println(puzzleWords);
-		generateWordSearchpuzzle();
+		generateWordSearchpuzzle();/*private method generating/placing words on wordsearch grid as well as placing char in unused spaces
+		calculates size of grid needed*/
 	}
 	
 	public WordSearchPuzzle(String wordFile, int wordCount, int shortest, int longest) {
@@ -19,18 +23,18 @@ public class WordSearchPuzzle {
 		for(int i = 0; i < wordCount; i++) {
 			Random r = new Random();
 			int index = r.nextInt(File.size());
-			if(File.get(i).length() >= shortest || File.get(i).length() <= longest ) {
+			if(File.get(index).length() >= shortest && File.get(index).length() <= longest ) {
 				words.add(i, File.get(index));
 			}else {
 				i--;
 			}
 		}
 		puzzleWords = words;
-		System.out.println(puzzleWords);
 		generateWordSearchpuzzle();
 	}
 	
 	public List<String> getWordSearchList(){
+		//List<String> sortedList = Collections.sort(puzzleWords);
 		Collections.sort(puzzleWords);
 		puzzleWords.stream().forEachOrdered(System.out::println);
 		return puzzleWords;
@@ -64,9 +68,9 @@ public class WordSearchPuzzle {
 	}
 	
 	private void generateWordSearchpuzzle() {
-		size();
-		fill();
-		fillUnused();
+		size();//calculates size of grid needed
+		fill();//fills selected words onto grid at random
+		fillUnused();//fills unused spaces with random chars from alphabet
 	}
 	
 	private void size() {
@@ -75,31 +79,76 @@ public class WordSearchPuzzle {
 			int wordLength = puzzleWords.get(i).length();
 			sum = sum + wordLength;
 		}
-		int characters = (int) (sum * 1.5);
+		int characters = (int) (sum * 1.75);
 		int length = (int) (Math.sqrt(characters)) + 1;
+		System.out.println(length);
 		puzzle = new char[length][length];
 	}
 	
+	private void fill() {
+		Random rand = new Random();
+		int rCol,rRow2;
+		int place = 0;
+		for(int i = 0; i < puzzleWords.size();i++) {
+		    int placement = rand.nextInt(5); 
+		    String word = puzzleWords.get(i);
+		    char[] chars = new char[word.length()];
+		    int rRow = (int)(Math.random()*puzzle.length);
+		    int rCol2 = (int)(Math.random()*puzzle.length);
+		    word.getChars(0, word.length(), chars, 0);
+		    switch(placement){
+		    case 1: 		   
+			   place = puzzle.length - word.length();
+			   rCol = (int)(Math.random()*place);
+			   for(int j = 0; j < chars.length;j++) {
+				   puzzle[rRow][rCol] = chars[j];
+				   rCol++;
+			   }
+			   break;
+		    case 2:
+			   place = word.length();			   
+			   rCol = (int)(Math.random()*(puzzle.length - place) + place)-1;
+			   for(int j = 0; j < chars.length;j++) {
+				   puzzle[rRow][rCol] = chars[j];
+				   rCol--;
+			   }
+			   break;
+		    case 3:
+		    	place = puzzle.length - word.length();
+				rRow2 = (int)(Math.random()*place);				   
+				   for(int j = 0; j < chars.length;j++) {
+					   puzzle[rRow2][rCol2] = chars[j];
+					   rRow2++;
+				   }
+			   break;
+		    case 4: 
+		    	place = word.length();			   
+				rRow2 = (int)(Math.random()*(puzzle.length - place) + place)-1;
+				for(int j = 0; j < chars.length;j++) {
+					puzzle[rRow2][rCol2] = chars[j];
+					rRow2--;
+				}
+		       break;
+		   }
+	   }
+    }	
+	
 	private void fillUnused() {
+		Random rand = new Random();
 		String abc = "abcdefghijklmnopqrstuvwxyz";
 		for(int row = 0; row < puzzle.length; row++) {
 			for(int col = 0; col < puzzle[0].length; col++) {
 				if(puzzle[row][col] == ' ') {
-					int rand =(int)(Math.random()*abc.length());
-					puzzle[row][col] = abc.charAt(rand);
+					char letter = (char) rand.nextInt(26);
+					System.out.println(rand);
+					char ch = abc.toUpperCase().charAt(letter);
+					puzzle[row][col] = ch;
 				}
+				
 			}
 		}
-	}
-	
-	private void fill() {
-		int rRow,rCol;
-		String word;
 		
-		   rRow = (int)(Math.random()*puzzle.length);
-		   rCol = (int)(Math.random()*puzzle[0].length);
-		   word = puzzleWords.get(i); 
-	}		   								 
+	}
 	
 	private static ArrayList<String> loadWordsFromFile(String filename){
 		try {
@@ -121,4 +170,9 @@ public class WordSearchPuzzle {
 		}
 	}
 
+
+
+    public boolean exists(int row, int col) {
+	    return (row >= 0 && row < puzzle.length) && (col >= 0 && col < puzzle[0].length);
+	}
 }
