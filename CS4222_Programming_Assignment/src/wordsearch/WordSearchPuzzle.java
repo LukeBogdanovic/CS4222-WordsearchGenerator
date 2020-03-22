@@ -164,9 +164,8 @@ public class WordSearchPuzzle {
 		String abc = "abcdefghijklmnopqrstuvwxyz";
 		for(int row = 0; row < puzzle.length; row++) {
 			for(int col = 0; col < puzzle[0].length; col++) {
-				if(puzzle[row][col] == ' ') {
+				if(puzzle[row][col] == '\0') {
 					char letter = (char) rand.nextInt(26);
-					System.out.println(rand);
 					char ch = abc.toUpperCase().charAt(letter);
 					puzzle[row][col] = ch;
 				}
