@@ -5,14 +5,14 @@ import java.io.*;
 public class WordSearchPuzzle {
 	private char[][]puzzle;
 	private List<String> puzzleWords;
-	private int[] direction;
-	private int[] row;
-	private int[] col;
+	private int[] direction;//storage for placement direction of words
+	private int[] row;//storage for first row position of word
+	private int[] col;//storage for first col position of word
 	
 	public WordSearchPuzzle(List<String> userSpecifiedWords) {
 		List<String> words = new ArrayList<String>(userSpecifiedWords);
 		puzzleWords = words;
-		getWordSearchList();
+		getWordSearchList();//must be gottenbefore generation so positions listed are correct
 		generateWordSearchpuzzle();/*private method generating/placing words on wordsearch grid as well as placing char in unused spaces
 		calculates size of grid needed*/
 	}
@@ -35,7 +35,7 @@ public class WordSearchPuzzle {
 	}
 	
 	public List<String> getWordSearchList(){
-		puzzleWords.sort(Comparator.naturalOrder());
+		puzzleWords.sort(Comparator.naturalOrder());//puzzleWords are listed alphabetically
 		return puzzleWords;
 	}
 	
@@ -55,11 +55,9 @@ public class WordSearchPuzzle {
 	}
 	
 	public void showWordSearchPuzzle(boolean hide) {
-		System.out.println(getPuzzleAsString());
 		if(hide == false) {
 			for(int i = 0; i < direction.length;i++) {
 				int placement = direction[i];
-				System.out.println(placement);
 			    String word = puzzleWords.get(i);
 			    switch(placement) {
 			    case 1:
@@ -107,7 +105,7 @@ public class WordSearchPuzzle {
 		int rCol,rRow2;//rCol = placement method for horizontal placement. rRow2 = placement method for vertical placement.
 		int place = 0;
 		for(int i = 0; i < puzzleWords.size();i++) {
-		    int placement = (int)(Math.random()* 4) +1;
+		    int placement = (int)(Math.random()* 4) + 1;
 		    direction[i] = placement;
 		    String word = puzzleWords.get(i);
 		    char[] chars = new char[word.length()];
@@ -155,9 +153,9 @@ public class WordSearchPuzzle {
 					rRow2--;
 				}
 		       break;
-		   }
-	   }
-    }	
+		    }
+	    }
+     }	
 	
 	private void fillUnused() {
 		Random rand = new Random();
@@ -193,9 +191,5 @@ public class WordSearchPuzzle {
 		catch(IOException x) {
 			return null;
 		}
-	}
-
-    public boolean exists(int row, int col) {
-	    return (row >= 0 && row < puzzle.length) && (col >= 0 && col < puzzle[0].length);
 	}
 }
