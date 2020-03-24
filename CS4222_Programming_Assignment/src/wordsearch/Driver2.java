@@ -9,11 +9,12 @@ public class Driver2 {
 		words.add("under");
 		words.add("station");
 		words.add("whenever");
-		words.add("cause");
+		words.add("nope");
 		words.add("checked");
 		words.add("whatever");
 		WordSearchPuzzle call = new WordSearchPuzzle(words);
 		call.getPuzzleAsGrid();
+		call.showWordSearchPuzzle(false);
 
 	}
 

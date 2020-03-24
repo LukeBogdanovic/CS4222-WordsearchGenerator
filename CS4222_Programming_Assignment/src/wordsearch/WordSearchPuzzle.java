@@ -12,7 +12,7 @@ public class WordSearchPuzzle {
 	public WordSearchPuzzle(List<String> userSpecifiedWords) {
 		List<String> words = new ArrayList<String>(userSpecifiedWords);
 		puzzleWords = words;
-		getWordSearchList();//must be gottenbefore generation so positions listed are correct
+		getWordSearchList();//must be gotten before generation so positions listed are correct
 		generateWordSearchpuzzle();/*private method generating/placing words on wordsearch grid as well as placing char in unused spaces
 		calculates size of grid needed*/
 	}
@@ -87,7 +87,7 @@ public class WordSearchPuzzle {
 		col = new int[puzzleWords.size()];
 		size();//calculates size of grid needed
 		fill();//fills selected words onto grid at random
-		fillUnused();//fills unused spaces with random chars from alphabet
+		//fillUnused();//fills unused spaces with random chars from alphabet
 	}
 	
 	private void size() {
@@ -113,7 +113,7 @@ public class WordSearchPuzzle {
 		    int rCol2 = (int)(Math.random()*puzzle.length);
 		    word.getChars(0, word.length(), chars, 0);
 		    switch(placement){
-		    case 1: 		   
+		    case 1: 	//Right	   
 			   place = puzzle.length - word.length();
 			   rCol = (int)(Math.random()*place);
 			   row[i] = rRow;
@@ -123,7 +123,7 @@ public class WordSearchPuzzle {
 				   rCol++;
 			   }
 			   break;
-		    case 2:
+		    case 2://Left
 			   place = word.length();			   
 			   rCol = (int)(Math.random()*(puzzle.length - place) + place)-1;
 			   row[i] = rRow;
@@ -133,7 +133,7 @@ public class WordSearchPuzzle {
 				   rCol--;
 			   }
 			   break;
-		    case 3:
+		    case 3://Up
 		    	place = puzzle.length - word.length();
 				rRow2 = (int)(Math.random()*place);
 				row[i] = rRow2;
@@ -143,7 +143,7 @@ public class WordSearchPuzzle {
 					   rRow2++;
 				}
 			   break;
-		    case 4: 
+		    case 4: //Down
 		    	place = word.length();			   
 				rRow2 = (int)(Math.random()*(puzzle.length - place) + place)-1;
 				row[i] = rRow2;
@@ -158,14 +158,12 @@ public class WordSearchPuzzle {
      }	
 	
 	private void fillUnused() {
-		Random rand = new Random();
 		String abc = "abcdefghijklmnopqrstuvwxyz";
 		for(int row = 0; row < puzzle.length; row++) {
 			for(int col = 0; col < puzzle[0].length; col++) {
 				if(puzzle[row][col] == '\0') {
-					char letter = (char) rand.nextInt(26);
-					char ch = abc.toUpperCase().charAt(letter);
-					puzzle[row][col] = ch;
+					int letter = (int) (Math.random()*abc.length());
+					puzzle[row][col] = abc.toUpperCase().charAt(letter);
 				}
 				
 			}
@@ -173,6 +171,67 @@ public class WordSearchPuzzle {
 		
 	}
 	
+	private boolean checkPlacement(char[][]grid,int row,int col,String word,int dir) {
+		boolean appropriate = false;
+		switch(dir) {
+		case 1:
+			for(int i = 0; i < word.length();i++) {
+				if((col + i) < grid.length) {
+					appropriate = true;
+					if(grid[row][col + i] != '\0' && grid[row][col+i] != word.charAt(i)) {
+						appropriate = false;
+						break;
+					}
+				}else {
+					appropriate = false;
+				}
+			}
+			return appropriate;
+		case 2:
+			for (int i = 0; i < word.length(); i++){
+				if ((col - i) >= 0){
+					appropriate = true;
+					if (grid[row][col - i] != '\0' && grid[row][col - i] != word.charAt(i)){
+						appropriate = false;
+						break;
+					}
+				}else{
+					appropriate = false;
+				}
+			}
+			return appropriate;
+		case 3:
+			for (int i = 0; i < word.length(); i++){
+				if ((row - i) >= 0) {
+					appropriate = true;
+					if (grid[row - i][col] != '\0' && grid[row - i][col] != word.charAt(i)){
+						appropriate = false;
+						break;
+					}
+				}else{
+					appropriate = false;
+				}
+			}
+			return appropriate;
+		case 4:
+			for (int i = 0; i < word.length(); i++){
+				if ((row + i) < grid.length){		
+					appropriate = true;
+					if (grid[row + i][col] != '\0' && grid[row + i][col] != word.charAt(i)) {
+						appropriate = false;
+						break;
+					}
+				}else{
+					appropriate = false;
+				}
+			}
+			return appropriate;
+		default:
+			return false;
+		}
+	}
+	
+	//used code from load file example 
 	private static ArrayList<String> loadWordsFromFile(String filename){
 		try {
 			FileReader aFileReader = new FileReader(filename);
