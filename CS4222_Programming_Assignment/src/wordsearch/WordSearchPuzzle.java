@@ -172,6 +172,32 @@ public class WordSearchPuzzle {
 		}
 		
 	}
+	
+	private boolean validPlacement(String word,int row,int col,int placement) {
+		boolean valid = false;
+		int spaceAvailable = 0;
+		int r=0,c=0;
+		if(placement <= 2) {//horizontal word checks
+		   while(!valid) {
+		      for(int i = c;i < puzzle.length;i++) {
+				       spaceAvailable++;
+				       if(spaceAvailable > word.length()) {
+				    	   valid = true;
+				       }else 
+			      }
+		      }
+		   }
+		}else if(placement > 2) {//vertical word checks
+		    while(!valid) {
+		       for(int i = r;i < puzzle.length;i++) {
+			      if(puzzle[r][col] == '\0') {
+				      spaceAvailable++;
+			      } 
+		       }
+		    }
+		}
+		return valid;
+	}
 	//used code from load file example 
 	private static ArrayList<String> loadWordsFromFile(String filename){
 		try {
