@@ -86,7 +86,7 @@ public class WordSearchPuzzle {
 		row = new int[puzzleWords.size()];
 		col = new int[puzzleWords.size()];
 		size();//calculates size of grid needed
-		fill();//fills selected words onto grid at random
+		fillWords();//fills selected words onto grid at random
 		fillUnused();//fills unused spaces with random chars from alphabet
 	}
 	
@@ -96,66 +96,108 @@ public class WordSearchPuzzle {
 			int wordLength = puzzleWords.get(i).length();
 			sum = sum + wordLength;
 		}
-		int characters = (int) (sum * 1.75);
+		int characters = (int) (sum * 3);
 		int length = (int) (Math.sqrt(characters)) + 1;
 		puzzle = new char[length][length];
 	}
 	
-	private void fill() {
-		int rCol,rRow2;//rCol = placement method for horizontal placement. rRow2 = placement method for vertical placement.
-		int place = 0;
+	private void fillWords() {
+		int rCol,rRow2,rCol2,rRow,placement,endOfWord;//rCol = placement method for horizontal placement. rRow2 = placement method for vertical placement.
 		for(int i = 0; i < puzzleWords.size();i++) {
-		    int placement = (int)(Math.random()* 4) + 1;
+			boolean placed = false;
+		    placement = (int)(Math.random()* 4) + 1;
 		    direction[i] = placement;
-		    String word = puzzleWords.get(i);
-		    char[] chars = new char[word.length()];
-		    int rRow = (int)(Math.random()*puzzle.length);
-		    int rCol2 = (int)(Math.random()*puzzle.length);
-		    word.getChars(0, word.length(), chars, 0);
+		    String result,word = puzzleWords.get(i);
+		    rCol2 = (int)(Math.random()*puzzle.length);
+		    rRow = (int)(Math.random()*puzzle[0].length);
 		    switch(placement){
 		    case 1: 		   
-			   place = puzzle.length - word.length();
-			   rCol = (int)(Math.random()*place);
-			   row[i] = rRow;
-			   col[i] = rCol;
-			   for(int j = 0; j < chars.length;j++) {
-				   puzzle[rRow][rCol] = chars[j];
-				   rCol++;
-			   }
-			   break;
-		    case 2:
-			   place = word.length();			   
-			   rCol = (int)(Math.random()*(puzzle.length - place) + place)-1;
-			   row[i] = rRow;
-			   col[i] = rCol;
-			   for(int j = 0; j < chars.length;j++) {
-				   puzzle[rRow][rCol] = chars[j];
-				   rCol--;
-			   }
-			   break;
+			    rCol = (int)(Math.random()*(puzzle.length - word.length()));
+			    endOfWord = rCol + (word.length()-1);
+			    while(!placed) {
+			       if(checkPlacementH(rRow,rCol,endOfWord)) {
+			    	  row[i] = rRow;
+					  col[i] = rCol;
+			          for(int j = 0; j < word.length();j++) {
+				          puzzle[rRow][rCol] = word.charAt(j);
+				          rCol++;
+			          }
+			          placed = true;
+			          break;
+			       }
+			       rRow++;
+			       if(rRow == puzzle.length) {
+			    	   rRow = 0;
+			       }
+			    }
+			    break;
+		    case 2:		   
+			    rCol = (int)(Math.random()*(puzzle.length - word.length()));
+			    endOfWord = rCol + (word.length()-1);
+			    result = new StringBuffer(word).reverse().toString();
+			    while(!placed) {
+			       if(checkPlacementH(rRow,rCol,endOfWord)) {
+			    	  row[i] = rRow;
+					  col[i] = endOfWord;
+			          for(int j = 0; j < word.length();j++) {
+				          puzzle[rRow][rCol] = result.charAt(j);
+				          rCol++;
+			          }
+			       placed = true;
+			       break;
+			       }
+			    rRow++;
+			    if(rRow == puzzle.length) {
+			    	rRow = 0;
+			    }
+			    }
+			    break;
 		    case 3:
-		    	place = puzzle.length - word.length();
-				rRow2 = (int)(Math.random()*place);
+				rRow2 = (int)(Math.random()*(puzzle[0].length - word.length()));
+				endOfWord = rRow2 + (word.length()-1);
 				row[i] = rRow2;
-				col[i] = rCol2;
-				for(int j = 0; j < chars.length;j++) {
-					   puzzle[rRow2][rCol2] = chars[j];
-					   rRow2++;
+			    col[i] = rCol2;
+				while(!placed) {
+				   if(checkPlacementV(rCol2,rRow2,endOfWord)) {
+					  row[i] = rRow2;
+					  col[i] = rCol2;
+				      for(int j = 0; j < word.length();j++) {
+					      puzzle[rRow2][rCol2] = word.charAt(j);
+					      rRow2++;
+				      }				      
+				      placed = true;
+				      break;
+				   }
+				   rCol2++;
+				   if(rCol2 == puzzle[0].length) {
+					   rCol2 = 0;
+				   }
 				}
-			   break;
-		    case 4: 
-		    	place = word.length();			   
-				rRow2 = (int)(Math.random()*(puzzle.length - place) + place)-1;
-				row[i] = rRow2;
-				col[i] = rCol2;
-				for(int j = 0; j < chars.length;j++) {
-					puzzle[rRow2][rCol2] = chars[j];
-					rRow2--;
-				}
-		       break;
+			    break;
+		    case 4: 			   
+			    rRow2 = (int)(Math.random()*(puzzle[0].length - word.length()));
+			    endOfWord = rRow2 + (word.length()-1);
+			    result = new StringBuffer(word).reverse().toString();
+			    while(!placed) {
+			       if(checkPlacementV(rCol2,rRow2,endOfWord)) {
+			    	  row[i] = endOfWord;
+					  col[i] = rCol2;
+			          for(int j = 0; j < word.length();j++) {
+					      puzzle[rRow2][rCol2] = result.charAt(j);
+					      rRow2++;
+			          }
+			          placed = true;
+			          break;
+			       }
+			       rCol2++;
+			       if(rCol2 == puzzle.length) {
+			    	   rCol2 = 0;
+			       }
+			    }
+		        break;
 		    }
 	    }
-     }	
+     }
 	
 	private void fillUnused() {
 		Random rand = new Random();
@@ -166,40 +208,38 @@ public class WordSearchPuzzle {
 					char letter = (char) rand.nextInt(26);
 					char ch = abc.toUpperCase().charAt(letter);
 					puzzle[row][col] = ch;
-				}
-				
+				}		
 			}
 		}
-		
 	}
-	
-	private boolean validPlacement(String word,int row,int col,int placement) {
+	//horizontal check
+	private boolean checkPlacementH(int row,int startCol,int endCol) {
 		boolean valid = false;
-		int spaceAvailable = 0;
-		int r=0,c=0;
-		if(placement <= 2) {//horizontal word checks
-		   while(!valid) {
-		      for(int i = c;i < puzzle.length;i++) {
-				       spaceAvailable++;
-				       if(spaceAvailable > word.length()) {
-				    	   valid = true;
-				       }else 
-			      }
-		      }
-		   }
-		}else if(placement > 2) {//vertical word checks
-		    while(!valid) {
-		       for(int i = r;i < puzzle.length;i++) {
-			      if(puzzle[r][col] == '\0') {
-				      spaceAvailable++;
-			      } 
-		       }
-		    }
+		for(int i = startCol; i <= endCol; i++) {
+			if(puzzle[row][i] != '\0') {
+				valid = false;
+				break;
+			}else {
+				valid = true;
+			}
+		}
+		return valid;
+	}
+	//vertical check
+	private boolean checkPlacementV(int col,int startRow,int endRow) {
+		boolean valid = false;
+		for(int i = startRow; i <= endRow; i++) {
+			if(puzzle[i][col] != '\0') {
+				valid = false;
+				break;
+			}else {
+				valid = true;
+			}
 		}
 		return valid;
 	}
 	//used code from load file example 
-	private static ArrayList<String> loadWordsFromFile(String filename){
+	private ArrayList<String> loadWordsFromFile(String filename) {
 		try {
 			FileReader aFileReader = new FileReader(filename);
 			BufferedReader aBufferReader = new BufferedReader(aFileReader);
