@@ -40,13 +40,6 @@ public class WordSearchPuzzle {
 	}
 	
 	public char[][] getPuzzleAsGrid(){
-		for(int row = 0; row < puzzle.length;row++ ) {
-			for(int col = 0; col < puzzle[0].length;col++) {
-				puzzle[row][col] = puzzle[row][col];
-				System.out.print(puzzle[row][col] + " ");
-			}
-			System.out.println();
-		}
 		return puzzle;
 	}
 	
@@ -55,7 +48,7 @@ public class WordSearchPuzzle {
 	}
 	
 	public void showWordSearchPuzzle(boolean hide) {
-		if(hide == false) {
+		if(!hide) {
 			for(int i = 0; i < direction.length;i++) {
 				int placement = direction[i];
 			    String word = puzzleWords.get(i);
@@ -96,13 +89,13 @@ public class WordSearchPuzzle {
 			int wordLength = puzzleWords.get(i).length();
 			sum = sum + wordLength;
 		}
-		int characters = (int) (sum * 3);
+		int characters = (int) (sum * 1.75);
 		int length = (int) (Math.sqrt(characters)) + 1;
 		puzzle = new char[length][length];
 	}
 	
 	private void fillWords() {
-		int rCol,rRow2,rCol2,rRow,placement,endOfWord;//rCol = placement method for horizontal placement. rRow2 = placement method for vertical placement.
+		int rCol,rRow2,rCol2,rRow,placement,endOfWord,times;//rCol = placement method for horizontal placement. rRow2 = placement method for vertical placement.
 		for(int i = 0; i < puzzleWords.size();i++) {
 			boolean placed = false;
 		    placement = (int)(Math.random()* 4) + 1;
@@ -114,27 +107,34 @@ public class WordSearchPuzzle {
 		    case 1: 		   
 			    rCol = (int)(Math.random()*(puzzle.length - word.length()));
 			    endOfWord = rCol + (word.length()-1);
+			    times = 0;
 			    while(!placed) {
-			       if(checkPlacementH(rRow,rCol,endOfWord)) {
-			    	  row[i] = rRow;
-					  col[i] = rCol;
-			          for(int j = 0; j < word.length();j++) {
-				          puzzle[rRow][rCol] = word.charAt(j);
-				          rCol++;
-			          }
-			          placed = true;
-			          break;
-			       }
-			       rRow++;
-			       if(rRow == puzzle.length) {
-			    	   rRow = 0;
-			       }
+			        if(checkPlacementH(rRow,rCol,endOfWord)) {
+			    	    row[i] = rRow;
+					    col[i] = rCol;
+			            for(int j = 0; j < word.length();j++) {
+				            puzzle[rRow][rCol] = word.charAt(j);
+				            rCol++;
+			            }
+			           placed = true;
+			           break;
+			        }
+			        times++;
+			        rRow++;
+			        if(rRow == puzzle.length) {
+			    	    rRow = 0;
+			        }
+			        if(times == 10) {
+			        	i--;
+			        	break;
+			        }
 			    }
 			    break;
 		    case 2:		   
 			    rCol = (int)(Math.random()*(puzzle.length - word.length()));
 			    endOfWord = rCol + (word.length()-1);
 			    result = new StringBuffer(word).reverse().toString();
+			    times = 10;
 			    while(!placed) {
 			       if(checkPlacementH(rRow,rCol,endOfWord)) {
 			    	  row[i] = rRow;
@@ -146,10 +146,14 @@ public class WordSearchPuzzle {
 			       placed = true;
 			       break;
 			       }
-			    rRow++;
-			    if(rRow == puzzle.length) {
-			    	rRow = 0;
-			    }
+			       rRow++;
+			       if(rRow == puzzle.length) {
+			    	   rRow = 0;
+			       }
+			       if(times == 10) {
+			    	   i--;
+			    	   break;
+			       }
 			    }
 			    break;
 		    case 3:
@@ -157,6 +161,7 @@ public class WordSearchPuzzle {
 				endOfWord = rRow2 + (word.length()-1);
 				row[i] = rRow2;
 			    col[i] = rCol2;
+			    times = 0;
 				while(!placed) {
 				   if(checkPlacementV(rCol2,rRow2,endOfWord)) {
 					  row[i] = rRow2;
@@ -172,12 +177,17 @@ public class WordSearchPuzzle {
 				   if(rCol2 == puzzle[0].length) {
 					   rCol2 = 0;
 				   }
+				   if(times == 10) {
+					   i--;
+					   break;
+				   }
 				}
 			    break;
 		    case 4: 			   
 			    rRow2 = (int)(Math.random()*(puzzle[0].length - word.length()));
 			    endOfWord = rRow2 + (word.length()-1);
 			    result = new StringBuffer(word).reverse().toString();
+			    times = 0;
 			    while(!placed) {
 			       if(checkPlacementV(rCol2,rRow2,endOfWord)) {
 			    	  row[i] = endOfWord;
@@ -192,6 +202,10 @@ public class WordSearchPuzzle {
 			       rCol2++;
 			       if(rCol2 == puzzle.length) {
 			    	   rCol2 = 0;
+			       }
+			       if(times == 10) {
+			    	   i--;
+			    	   break;
 			       }
 			    }
 		        break;
