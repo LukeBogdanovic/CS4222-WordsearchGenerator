@@ -90,7 +90,7 @@ public class WordSearchPuzzle {
 			sum = sum + wordLength;
 		}
 		int characters = (int) (sum * 1.75);
-		int length = (int) (Math.sqrt(characters)) + 1;
+		int length = (int) ((Math.sqrt(characters)) + 1) + 5;
 		puzzle = new char[length][length];
 	}
 	
@@ -121,10 +121,10 @@ public class WordSearchPuzzle {
 			        }
 			        times++;
 			        rRow++;
-			        if(rRow == puzzle.length) {
+			        if(rRow >= puzzle.length) {
 			    	    rRow = 0;
 			        }
-			        if(times == 10) {
+			        if(times == puzzle.length) {
 			        	i--;
 			        	break;
 			        }
@@ -134,7 +134,7 @@ public class WordSearchPuzzle {
 			    rCol = (int)(Math.random()*(puzzle.length - word.length()));
 			    endOfWord = rCol + (word.length()-1);
 			    result = new StringBuffer(word).reverse().toString();
-			    times = 10;
+			    times = 0;
 			    while(!placed) {
 			       if(checkPlacementH(rRow,rCol,endOfWord)) {
 			    	  row[i] = rRow;
@@ -146,11 +146,12 @@ public class WordSearchPuzzle {
 			       placed = true;
 			       break;
 			       }
+			       times++;
 			       rRow++;
-			       if(rRow == puzzle.length) {
+			       if(rRow >= puzzle.length) {
 			    	   rRow = 0;
 			       }
-			       if(times == 10) {
+			       if(times == puzzle.length) {
 			    	   i--;
 			    	   break;
 			       }
@@ -173,11 +174,12 @@ public class WordSearchPuzzle {
 				      placed = true;
 				      break;
 				   }
+				   times++;
 				   rCol2++;
-				   if(rCol2 == puzzle[0].length) {
+				   if(rCol2 >= puzzle[0].length) {
 					   rCol2 = 0;
 				   }
-				   if(times == 10) {
+				   if(times == puzzle.length) {
 					   i--;
 					   break;
 				   }
@@ -199,11 +201,12 @@ public class WordSearchPuzzle {
 			          placed = true;
 			          break;
 			       }
+			       times++;
 			       rCol2++;
-			       if(rCol2 == puzzle.length) {
+			       if(rCol2 >= puzzle.length) {
 			    	   rCol2 = 0;
 			       }
-			       if(times == 10) {
+			       if(times == puzzle.length) {
 			    	   i--;
 			    	   break;
 			       }
@@ -211,7 +214,7 @@ public class WordSearchPuzzle {
 		        break;
 		    }
 	    }
-     }
+    }
 	
 	private void fillUnused() {
 		Random rand = new Random();
@@ -229,12 +232,15 @@ public class WordSearchPuzzle {
 	//horizontal check
 	private boolean checkPlacementH(int row,int startCol,int endCol) {
 		boolean valid = false;
-		for(int i = startCol; i <= endCol; i++) {
+		for(int i = startCol; i < endCol; i++) {
 			if(puzzle[row][i] != '\0') {
 				valid = false;
 				break;
 			}else {
 				valid = true;
+			}
+			if(!valid) {
+				break;
 			}
 		}
 		return valid;
@@ -242,12 +248,15 @@ public class WordSearchPuzzle {
 	//vertical check
 	private boolean checkPlacementV(int col,int startRow,int endRow) {
 		boolean valid = false;
-		for(int i = startRow; i <= endRow; i++) {
+		for(int i = startRow; i < endRow; i++) {
 			if(puzzle[i][col] != '\0') {
 				valid = false;
 				break;
 			}else {
 				valid = true;
+			}
+			if(!valid) {
+				break;
 			}
 		}
 		return valid;
