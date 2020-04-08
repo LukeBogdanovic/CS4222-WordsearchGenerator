@@ -12,6 +12,9 @@ public class WordSearchPuzzle {
 	public WordSearchPuzzle(List<String> userSpecifiedWords) {
 		List<String> words = new ArrayList<String>(userSpecifiedWords);
 		puzzleWords = words;
+		for(int i = 0; i < puzzleWords.size(); i++) {
+            puzzleWords.set(i, puzzleWords.get(i).toUpperCase());
+        }
 		getWordSearchList();//must be gotten before generation so positions listed are correct
 		generateWordSearchpuzzle();/*private method generating/placing words on wordsearch grid as well as placing char in unused spaces
 		calculates size of grid needed*/
@@ -90,7 +93,7 @@ public class WordSearchPuzzle {
 			sum = sum + wordLength;
 		}
 		int characters = (int) (sum * 1.75);
-		int length = (int) ((Math.sqrt(characters)) + 1) + 5;
+		int length = (int) ((Math.sqrt(characters)) + 1) + 3;//+3 allows all words to be placed on the board without beginning an endless loop
 		puzzle = new char[length][length];
 	}
 	
@@ -99,7 +102,7 @@ public class WordSearchPuzzle {
 		for(int i = 0; i < puzzleWords.size();i++) {
 			boolean placed = false;
 		    placement = (int)(Math.random()* 4) + 1;
-		    direction[i] = placement;
+		    direction[i] = placement;//finds and saves placement direction for showWordSearchPuzzle method 
 		    String result,word = puzzleWords.get(i);
 		    rCol2 = (int)(Math.random()*puzzle.length);
 		    rRow = (int)(Math.random()*puzzle[0].length);
@@ -207,8 +210,8 @@ public class WordSearchPuzzle {
 			    	   rCol2 = 0;
 			       }
 			       if(times == puzzle.length) {
-			    	   i--;
-			    	   break;
+			    	   i--;//If a word cannot be placed in a set amount of tries the program 
+			    	   break;//goes to the start of the loop to try again with a different random placement
 			       }
 			    }
 		        break;
